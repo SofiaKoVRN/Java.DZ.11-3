@@ -5,138 +5,155 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskTest {
+public class TaskTest {
+    // ТЕСТЫ СИМПЛ
+    // Симпл Запрос есть
     @Test
-    public void simpleTaskMatches() {
-        SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
-        TodosManager todos = new TodosManager();
-
-        boolean actual = simpleTask.matches("Позвонить");
+    public void matchesSimpleTaskQueryTrue() {
+        SimpleTask simpleTask = new SimpleTask(
+                1,
+                "One"
+        );
+        String query = "One";
         boolean expected = true;
-
+        boolean actual = simpleTask.matches(query);
         Assertions.assertEquals(expected, actual);
-
     }
 
+    // Симпл Запроса нет
     @Test
-    public void simpleTaskNotMatches() {
-        SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
-        TodosManager todos = new TodosManager();
-
-        boolean actual = simpleTask.matches("Написать");
+    public void matchesSimpleTaskQueryFalse() {
+        SimpleTask simpleTask = new SimpleTask(
+                1,
+                "One"
+        );
+        String query = "Two";
         boolean expected = false;
-
+        boolean actual = simpleTask.matches(query);
         Assertions.assertEquals(expected, actual);
     }
 
+    // ТЕСТЫ ЭПИК
+    // Запрос в массиве есть
     @Test
-    public void simpleEpicMatches() {
-        String[] subtasks = {"Молоко", "Яйца", "Хлеб"};
-        Epic epic = new Epic(55, subtasks);
+    public void matchesEpicQueryTrue() {
+        String[] subtasks = {"One", "Two", "Three"};
+        Epic epic = new Epic(5, subtasks);
 
-        boolean actual = epic.matches("Молоко");
+        String query = "Two";
         boolean expected = true;
-
+        boolean actual = epic.matches(query);
         Assertions.assertEquals(expected, actual);
     }
 
+    // Запроса в массиве нет
     @Test
-    public void simpleEpicNotMatches() {
-        String[] subtasks = {"Молоко", "Яйца", "Хлеб"};
-        Epic epic = new Epic(55, subtasks);
+    public void matchesEpicQueryFalse() {
+        String[] subtasks = {"One", "Two", "Three"};
+        Epic epic = new Epic(5, subtasks);
 
-        boolean actual = epic.matches("Вода");
+        String query = "Four";
         boolean expected = false;
-
+        boolean actual = epic.matches(query);
         Assertions.assertEquals(expected, actual);
     }
 
+    // ТЕСТЫ МИТИНГ
+    // Запрос топик есть
     @Test
-    public void simpleMeetingMatchesTopic() {
+    public void matchesMeetingQueryTopicTrueProjectFalseStartFalse() {
         Meeting meeting = new Meeting(
-                555,
-                "Выкатка 3й версии приложения",
-                "Приложение НетоБанка",
-                "Во вторник после обеда"
+                1,
+                "One",
+                "Two",
+                "Three"
         );
 
-        boolean actual = meeting.matches("Выкатка 3й версии приложения");
+        String query = "One";
         boolean expected = true;
-
+        boolean actual = meeting.matches(query);
         Assertions.assertEquals(expected, actual);
     }
 
+    // Запроса проджект есть
     @Test
-    public void simpleMeetingMatchesProject() {
-        Meeting meeting = new Meeting(
-                555,
-                "Выкатка 3й версии приложения",
-                "Приложение НетоБанка",
-                "Во вторник после обеда"
-        );
+    public void matchesMeetingQueryTopicFalseProjectTrueStartFalse() {
+        Meeting meeting = new Meeting(1, "One", "Two", "Three");
 
-        boolean actual = meeting.matches("Приложение НетоБанка");
+        String query = "Two";
         boolean expected = true;
-
+        boolean actual = meeting.matches(query);
         Assertions.assertEquals(expected, actual);
     }
 
+    // Старт есть, топика и проджекта нет
     @Test
-    public void simpleMeetingNotMatches() {
-        Meeting meeting = new Meeting(
-                555,
-                "Выкатка 3й версии приложения",
-                "Приложение НетоБанка",
-                "Во вторник после обеда"
-        );
+    public void matchesMeetingQueryTopicFalseProjectFalseStartTrue() {
+        Meeting meeting = new Meeting(1, "One", "Two", "Three");
 
-        boolean actual= meeting.matches("Во вторник после обеда");
+        String query = "Three";
         boolean expected = false;
+        boolean actual = meeting.matches(query);
+        Assertions.assertEquals(expected, actual);
+    }
 
+    // Ни топика, ни проджекта, ни старта нет
+    @Test
+    public void matchesMeetingQueryTopicFalseProjectFalseStartFalse() {
+        Meeting meeting = new Meeting(1, "One", "Two", "Three");
+
+        String query = "Four";
+        boolean expected = false;
+        boolean actual = meeting.matches(query);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void returnIdInTask() {
-        Task task = new Task(55);
-
-        int expected = 55;
+    public void shouldGetId() {
+        Task task = new Task(1);
+        int expected = 1;
         int actual = task.getId();
-
         Assertions.assertEquals(expected, actual);
     }
 
-//    @Test
-//    public void returnTrueOrFalseInEquals() {
-//        Task task = new Task(5);
-//
-//        boolean actual = task.equals(false);
-//        boolean expected = false;
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
+    @Test
+    public void shouldGetTitleOnSimpleTask() {
+        SimpleTask simpleTask = new SimpleTask(1, "One");
+        String expected = "One";
+        String actual = simpleTask.getTitle();
+        Assertions.assertEquals(expected, actual);
+    }
 
-//    @Test
-//    public void returnFalseInMatches() {
-//        SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
-//
-//        String actual = simpleTask.getTitle("Позвонить родителям");
-//        String expected = "Позвонить родителям";
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
+    @Test
+    public void shouldGetSubtasksOnEpic() {
+        String[] subtasks = {"One", "Two", "Three"};
+        Epic epic = new Epic(1, subtasks);
+        String[] expected = {"One", "Two", "Three"};
+        String[] actual = epic.getSubtasks();
+        Assertions.assertArrayEquals(expected, actual);
+    }
 
-//    @Test
-//    public void returnSubtasks() {
-//        String[] subtasks = {"Молоко", "Яйца", "Хлеб"};
-//        Epic epic = new Epic(55, subtasks);
-//
-//        String[] actual = epic.getSubtasks("Молоко");
-//        String expected = "Молоко";
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
+    @Test
+    public void shouldGetTopicInMeeting() {
+        Meeting meeting = new Meeting(1, "One", "Two", "Three");
+        String expected = "One";
+        String actual = meeting.getMeetingTopic();
+        Assertions.assertEquals(expected, actual);
+    }
 
+    @Test
+    public void shouldGetProjectInMeeting() {
+        Meeting meeting = new Meeting(1, "One", "Two", "Three");
+        String expected = "Two";
+        String actual = meeting.getMeetingProject();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldGetStartInMeeting() {
+        Meeting meeting = new Meeting(1, "One", "Two", "Three");
+        String expected = "Three";
+        String actual = meeting.getMeetingStart();
+        Assertions.assertEquals(expected, actual);
+    }
 }

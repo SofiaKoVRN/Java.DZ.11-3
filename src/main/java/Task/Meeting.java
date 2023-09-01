@@ -12,15 +12,15 @@ public class Meeting extends Task {
         this.start = start;
     }
 
-    public String getTopic() {
+    public String getMeetingTopic() {
         return topic;
     }
 
-    public String getProject() {
+    public String getMeetingProject() {
         return project;
     }
 
-    public String getStart() {
+    public String getMeetingStart() {
         return start;
     }
 
